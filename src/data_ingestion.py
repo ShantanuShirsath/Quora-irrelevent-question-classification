@@ -15,6 +15,7 @@ import torch.optim as optim
 import torch.nn as nn
 from train_test import train_test_module
 import pickle
+from predict import predict_test
 
 @dataclass
 class DataIngestionConfig:
@@ -86,7 +87,7 @@ if __name__ == "__main__":
                                    criterion= criterion,
                                    batch_size= batch_size)
     print("--> strating training:")
-    epoch = 20
+    epoch = 10
     epoch_loss = []*epoch 
     epoch_Accuracy = []*epoch
     epoch_val_loss = []*epoch 
@@ -115,14 +116,6 @@ if __name__ == "__main__":
     # Serialize and save the model
     with open(model_path, 'wb') as f:
         pickle.dump(model_cpu, f)
-
-    y_3 = pd.read_csv("artifacts/test.csv")
-    y_test = torch.LongTensor(y_3['target'])
-
-    test_loader = load_data.create_dataloader(x_test,y_test)
-    test_accuracy, test_f1 = traintest.test_one_epoch(test_loader)
-
-    print(f"Test Accuracy: {test_accuracy:.2%}")
-    print(f"Test F1 Score: {test_f1:.4f}")
-
+    logging.info(f"number of epach: {epoch:.2%}")
+    predict_test(test_data_path=r"B:\Projects\NLP_irrelevent_question\artifacts\test.csv",batch_size=64)
 

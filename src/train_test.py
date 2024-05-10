@@ -102,30 +102,30 @@ class train_test_module(nn.Module):
             raise CustomException(e,sys)
         
 
-    def test_one_epoch(self,testloader):
-        try:
+def test_one_epoch(testloader,net,device,criterion):
+    try:
 
-            self.net.eval()  # Set the model to evaluation mode
-            self.net.to(self.device)
-            test_loss = 0.0
-            correct = 0
-            total = 0
-            predicted_labels = []
-            true_labels = []
-            with torch.no_grad():
-                for inputs, labels in testloader:
-                    inputs, labels = inputs.to(self.device), labels.to(self.device)  # Move data to device
-                    outputs = self.net(inputs)
-                    loss = self.criterion(outputs, labels)
-                    test_loss += loss.item()
-                    _, predicted = torch.max(outputs, 1)
-                    total += labels.size(0)
-                    correct += (predicted == labels).sum().item()
-                    predicted_labels.extend(predicted.cpu().numpy())
-                    true_labels.extend(labels.cpu().numpy())
-            accuracy = correct / total
-            f1 = f1_score(true_labels, predicted_labels, average='macro')
-            return accuracy, f1
+        net.eval()  # Set the model to evaluation mode
+        net.to(device)
+        test_loss = 0.0
+        correct = 0
+        total = 0
+        predicted_labels = []
+        true_labels = []
+        with torch.no_grad():
+            for inputs, labels in testloader:
+                inputs, labels = inputs.to(device), labels.to(device)  # Move data to device
+                outputs = net(inputs)
+                loss = criterion(outputs, labels)
+                test_loss += loss.item()
+                _, predicted = torch.max(outputs, 1)
+                total += labels.size(0)
+                correct += (predicted == labels).sum().item()
+                predicted_labels.extend(predicted.cpu().numpy())
+                true_labels.extend(labels.cpu().numpy())
+        accuracy = correct / total
+        f1 = f1_score(true_labels, predicted_labels, average='macro')
+        return accuracy, f1
         
-        except Exception as e:
-            raise CustomException(e,sys)
+    except Exception as e:
+        raise CustomException(e,sys)

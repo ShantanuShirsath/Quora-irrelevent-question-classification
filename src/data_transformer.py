@@ -63,7 +63,9 @@ class DataTransformation:
         '≎', '⚔', '⇇', '̑', '⊿', '̖', '☍', '➹', '⥊', '⁁', '✢']
        
        self.train_df['preprocessed_question_text'] = self.train_df['question_text'].map(lambda x: self.data_cleaning(x))
-       
+       self.tokenizer = Tokenizer()
+       self.tokenizer.fit_on_texts(self.train_df['preprocessed_question_text'])
+
     # Replacing math equations and url addresses with tags.
     def clean_tag(self,x):
         if '[math]' in x:
@@ -112,9 +114,7 @@ class DataTransformation:
     def get_data_transformation_object(self,df):
         try:
             df['preprocessed_question_text'] = df['question_text'].map(lambda x: self.data_cleaning(x))
-            tokenizer = Tokenizer()
-            tokenizer.fit_on_texts(self.train_df['preprocessed_question_text'])
-            sequences = tokenizer.texts_to_sequences(df['preprocessed_question_text'])
+            sequences = self.tokenizer.texts_to_sequences(df['preprocessed_question_text'])
             input_sequences = pad_sequences(sequences,maxlen = 20, padding = 'pre', truncating = 'post')
             
             return torch.LongTensor(input_sequences)
