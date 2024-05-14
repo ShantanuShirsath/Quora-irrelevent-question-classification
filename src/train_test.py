@@ -129,3 +129,5 @@ def test_one_epoch(testloader,net,device,criterion):
         
     except Exception as e:
         raise CustomException(e,sys)
+    
+   

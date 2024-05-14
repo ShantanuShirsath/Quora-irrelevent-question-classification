@@ -117,5 +117,6 @@ if __name__ == "__main__":
     with open(model_path, 'wb') as f:
         pickle.dump(model_cpu, f)
     logging.info(f"number of epach: {epoch:.2%}")
-    predict_test(test_data_path=r"B:\Projects\NLP_irrelevent_question\artifacts\test.csv",batch_size=64)
+    df = pd.read_csv(r"B:\Projects\NLP_irrelevent_question\artifacts\test.csv")
+    predict_test(df,batch_size=64)
 
